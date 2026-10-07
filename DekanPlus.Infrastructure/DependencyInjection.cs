@@ -1,5 +1,6 @@
 using DekanPlus.Domain.Interfaces.Repositories;
 using DekanPlus.Infrastructure.Persistence;
+using DekanPlus.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,12 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DekanPlusDbContext>());
+
+        services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<IDirectionRepository, DirectionRepository>();
+        services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+        services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IStudentRepository, StudentRepository>();
 
         return services;
     }
