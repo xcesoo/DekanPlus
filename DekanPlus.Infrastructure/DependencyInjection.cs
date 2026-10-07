@@ -1,6 +1,8 @@
+using DekanPlus.Domain.Interfaces;
 using DekanPlus.Domain.Interfaces.Repositories;
 using DekanPlus.Infrastructure.Persistence;
 using DekanPlus.Infrastructure.Persistence.Repositories;
+using DekanPlus.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ public static class DependencyInjection
         services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();
+
+        services.AddScoped<IRecordBookNumberGenerator, RecordBookNumberGenerator>();
 
         return services;
     }

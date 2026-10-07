@@ -1,6 +1,7 @@
 using DekanPlus.Domain.Entities;
 using DekanPlus.Domain.Enums;
 using DekanPlus.Domain.Interfaces.Repositories;
+using DekanPlus.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace DekanPlus.Infrastructure.Persistence.Repositories;
@@ -18,6 +19,15 @@ public class StudentRepository(DekanPlusDbContext dbContext) : IStudentRepositor
             .AsNoTracking()
             .Include(s => s.Group).ThenInclude(g => g.Specialty)
             .ToListAsync(cancellationToken);
+
+    public Task<bool> ExistsActiveAsync(FullName fullName, DateOnly birthDate, CancellationToken cancellationToken = default) =>
+        dbContext.Students.AnyAsync(s =>
+            s.Expulsion == null &&
+            s.BirthDate == birthDate &&
+            s.FullName.LastName == fullName.LastName &&
+            s.FullName.FirstName == fullName.FirstName &&
+            s.FullName.MiddleName == fullName.MiddleName,
+            cancellationToken);
 
     public async Task AddAsync(Student student, CancellationToken cancellationToken = default) =>
         await dbContext.Students.AddAsync(student, cancellationToken);

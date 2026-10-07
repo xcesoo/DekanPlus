@@ -2,6 +2,7 @@ using DekanPlus.Application.Exceptions;
 using DekanPlus.Domain.Entities;
 using DekanPlus.Domain.Interfaces.Repositories;
 using DekanPlus.Infrastructure.Persistence.Configurations;
+using DekanPlus.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -21,6 +22,7 @@ public class DekanPlusDbContext : DbContext, IUnitOfWork
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DepartmentConfiguration).Assembly);
         modelBuilder.HasPostgresExtension("pg_trgm");
+        modelBuilder.HasSequence<long>(RecordBookNumberGenerator.SequenceName);
         base.OnModelCreating(modelBuilder);
     }
 
