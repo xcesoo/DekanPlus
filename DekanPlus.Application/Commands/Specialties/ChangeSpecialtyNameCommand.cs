@@ -3,6 +3,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Specialties;
 
+/// <summary>Змінити назву фаху.</summary>
+/// <param name="Id">Ідентифікатор фаху.</param>
+/// <param name="Name">Назва.</param>
 public readonly record struct ChangeSpecialtyNameCommand(Guid Id, string Name) : IRequest;
 
 public class ChangeSpecialtyNameCommandHandler(

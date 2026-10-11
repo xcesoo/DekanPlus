@@ -109,7 +109,7 @@ public class Student
 
     public void Expel(DateOnly date, ExpulsionReason reason)
     {
-        EnsureNotExpelled();
+        EnsureNotExpelled("Студента вже відраховано.");
         Expulsion = Expulsion.Create(date, reason);
     }
 
@@ -120,10 +120,10 @@ public class Student
         Expulsion = null;
     }
 
-    private void EnsureNotExpelled()
+    private void EnsureNotExpelled(string message = "Студента відраховано: змінювати його дані неможливо.")
     {
         if (IsExpelled)
-            throw new InvalidOperationException("Студента вже відраховано.");
+            throw new InvalidOperationException(message);
     }
 
     private static void EnsureValidStudyForm(StudyForm studyForm)

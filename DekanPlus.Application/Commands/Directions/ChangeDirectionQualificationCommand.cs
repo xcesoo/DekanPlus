@@ -3,6 +3,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Directions;
 
+/// <summary>Змінити кваліфікацію напряму підготовки.</summary>
+/// <param name="Id">Ідентифікатор напряму підготовки.</param>
+/// <param name="Qualification">Кваліфікація, що присуджується випускнику.</param>
 public readonly record struct ChangeDirectionQualificationCommand(Guid Id, string Qualification) : IRequest;
 
 public class ChangeDirectionQualificationCommandHandler(

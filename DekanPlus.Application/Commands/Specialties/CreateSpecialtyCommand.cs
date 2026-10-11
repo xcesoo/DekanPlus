@@ -7,6 +7,12 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Specialties;
 
+/// <summary>Створити фах.</summary>
+/// <param name="StateCode">Державний номер (код), наприклад F3.</param>
+/// <param name="Name">Назва.</param>
+/// <param name="Qualification">Кваліфікація, що присуджується випускнику.</param>
+/// <param name="DirectionId">Ідентифікатор напряму підготовки.</param>
+/// <param name="DepartmentId">Ідентифікатор випускаючої кафедри.</param>
 public readonly record struct CreateSpecialtyCommand(
     string StateCode,
     string Name,

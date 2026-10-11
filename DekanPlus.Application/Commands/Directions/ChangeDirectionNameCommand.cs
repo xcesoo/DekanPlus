@@ -3,6 +3,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Directions;
 
+/// <summary>Змінити назву напряму підготовки.</summary>
+/// <param name="Id">Ідентифікатор напряму підготовки.</param>
+/// <param name="Name">Назва.</param>
 public readonly record struct ChangeDirectionNameCommand(Guid Id, string Name) : IRequest;
 
 public class ChangeDirectionNameCommandHandler(

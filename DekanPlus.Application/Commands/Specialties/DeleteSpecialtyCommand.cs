@@ -3,6 +3,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Specialties;
 
+/// <summary>Видалити фах (неможливо, якщо за ним є групи).</summary>
+/// <param name="Id">Ідентифікатор фаху.</param>
 public readonly record struct DeleteSpecialtyCommand(Guid Id) : IRequest;
 
 public class DeleteSpecialtyCommandHandler(

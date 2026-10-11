@@ -16,6 +16,11 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .HasColumnName("id")
             .ValueGeneratedNever();
 
+        builder.Property<uint>("xmin")
+            .HasColumnName("xmin")
+            .HasColumnType("xid")
+            .IsRowVersion();
+
         builder.OwnsOne(s => s.FullName, fn =>
         {
             fn.Property(f => f.LastName)

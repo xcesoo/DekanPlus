@@ -4,26 +4,27 @@ namespace DekanPlus.Application.Common.Rules.Implementations.Students;
 
 public class StudentAgeRule(TimeProvider timeProvider, StudentRulesOptions options) : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    private DateOnly Today => DateOnly.FromDateTime(timeProvider.GetLocalNow().DateTime);
+
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        if (context is not EnrollStudentContext ctx)
-            return RuleResult.Ok();
+        EnrollStudentContext ctx when ctx.BirthDate > Today
+            => RuleResult.Failed("Дата народження не може бути в майбутньому."),
 
-        var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
-        if (ctx.BirthDate > today)
-            return RuleResult.Failed("Дата народження не може бути в майбутньому.");
+        EnrollStudentContext { EnrollmentYear: >= 1 and <= 9999 } ctx when AgeAtAdmission(ctx) < options.MinEnrollmentAge
+            => RuleResult.Failed($"Вік на момент вступу має бути не меншим за {options.MinEnrollmentAge} років."),
 
-        if (ctx.EnrollmentYear is < 1 or > 9999)
-            return RuleResult.Ok();
+        EnrollStudentContext { EnrollmentYear: >= 1 and <= 9999 } ctx when AgeAtAdmission(ctx) > options.MaxEnrollmentAge
+            => RuleResult.Failed($"Вік на момент вступу не може перевищувати {options.MaxEnrollmentAge} років."),
 
+        _ => RuleResult.Ok()
+    };
+
+    private static int AgeAtAdmission(EnrollStudentContext ctx)
+    {
         var admissionDate = new DateOnly(ctx.EnrollmentYear, 9, 1);
         var age = admissionDate.Year - ctx.BirthDate.Year;
-        if (ctx.BirthDate.AddYears(age) > admissionDate)
-            age--;
 
-        if (age < options.MinEnrollmentAge)
-            return RuleResult.Failed($"Вік на момент вступу має бути не меншим за {options.MinEnrollmentAge} років.");
-
-        return RuleResult.Ok();
+        return ctx.BirthDate.AddYears(age) > admissionDate ? age - 1 : age;
     }
 }

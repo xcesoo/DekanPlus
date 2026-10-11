@@ -1,24 +1,21 @@
 using DekanPlus.Application.Common.Rules.Interfaces;
+using DekanPlus.Domain.Entities;
 
 namespace DekanPlus.Application.Common.Rules.Implementations.Specialties;
 
 public class SpecialtyCodeMatchesDirectionRule : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        var (direction, stateCode) = context switch
-        {
-            CreateSpecialtyContext ctx => (ctx.Direction, ctx.StateCode),
-            ChangeSpecialtyStateCodeContext ctx => (ctx.Direction, ctx.StateCode),
-            _ => (null, null)
-        };
+        CreateSpecialtyContext { StateCode: not null } ctx when !StartsWithDirectionCode(ctx.Direction, ctx.StateCode)
+            => RuleResult.Failed("Код фаху має починатися з коду напряму підготовки."),
 
-        if (direction is null || stateCode is null)
-            return RuleResult.Ok();
+        ChangeSpecialtyStateCodeContext { StateCode: not null } ctx when !StartsWithDirectionCode(ctx.Direction, ctx.StateCode)
+            => RuleResult.Failed("Код фаху має починатися з коду напряму підготовки."),
 
-        if (!stateCode.Trim().StartsWith(direction.StateCode, StringComparison.Ordinal))
-            return RuleResult.Failed("Код фаху має починатися з коду напряму підготовки.");
+        _ => RuleResult.Ok()
+    };
 
-        return RuleResult.Ok();
-    }
+    private static bool StartsWithDirectionCode(Direction direction, string stateCode) =>
+        stateCode.Trim().StartsWith(direction.StateCode, StringComparison.Ordinal);
 }

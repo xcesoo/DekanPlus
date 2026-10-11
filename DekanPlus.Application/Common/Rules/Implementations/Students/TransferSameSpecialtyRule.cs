@@ -4,14 +4,13 @@ namespace DekanPlus.Application.Common.Rules.Implementations.Students;
 
 public class TransferSameSpecialtyRule(StudentRulesOptions options) : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        if (context is not TransferStudentContext ctx || options.AllowTransferBetweenSpecialties)
-            return RuleResult.Ok();
+        TransferStudentContext ctx
+            when !options.AllowTransferBetweenSpecialties
+                 && ctx.Student.Group.SpecialtyId != ctx.TargetGroup.SpecialtyId
+            => RuleResult.Failed("Переведення між різними фахами не дозволено."),
 
-        if (ctx.Student.Group.SpecialtyId != ctx.TargetGroup.SpecialtyId)
-            return RuleResult.Failed("Переведення між різними фахами не дозволено.");
-
-        return RuleResult.Ok();
-    }
+        _ => RuleResult.Ok()
+    };
 }

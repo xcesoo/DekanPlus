@@ -18,6 +18,8 @@ public static class DependencyInjection
             o.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
 
+        services.AddSingleton<TimeProvider>(new ConfiguredTimeProvider(configuration["TimeZone"]));
+
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DekanPlusDbContext>());
 
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();

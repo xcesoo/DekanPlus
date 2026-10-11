@@ -2,8 +2,9 @@ namespace DekanPlus.Domain.Enums;
 
 public enum ExpulsionReason
 {
-    OwnReason,
-    AcademicFailure,
-    MisconductViolation,
-    Graduation
+    Unknown = 0,
+    OwnReason = 1,
+    AcademicFailure = 2,
+    MisconductViolation = 3,
+    Graduation = 4
 }

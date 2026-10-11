@@ -4,6 +4,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Groups;
 
+/// <summary>Змінити назву групи.</summary>
+/// <param name="Id">Ідентифікатор групи.</param>
+/// <param name="Name">Назва.</param>
 public readonly record struct ChangeGroupNameCommand(Guid Id, string Name) : IRequest;
 
 public class ChangeGroupNameCommandHandler(

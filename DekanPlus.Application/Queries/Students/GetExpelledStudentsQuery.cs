@@ -19,6 +19,9 @@ public class GetExpelledStudentsQueryHandler(IStudentRepository studentRepositor
 {
     public async Task<IReadOnlyCollection<ExpelledStudentsByReasonDto>> Handle(GetExpelledStudentsQuery request, CancellationToken cancellationToken)
     {
+        if (request.Reason is { } reason && (reason == ExpulsionReason.Unknown || !Enum.IsDefined(reason)))
+            throw new ArgumentException("Невідома причина відрахування.");
+
         if (request.From is { } from && request.To is { } to && from > to)
             throw new ArgumentException("Початкова дата не може бути пізнішою за кінцеву.");
 

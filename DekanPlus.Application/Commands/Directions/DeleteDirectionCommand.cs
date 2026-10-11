@@ -3,6 +3,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Directions;
 
+/// <summary>Видалити напрям підготовки (неможливо, якщо в ньому є фахи).</summary>
+/// <param name="Id">Ідентифікатор напряму підготовки.</param>
 public readonly record struct DeleteDirectionCommand(Guid Id) : IRequest;
 
 public class DeleteDirectionCommandHandler(

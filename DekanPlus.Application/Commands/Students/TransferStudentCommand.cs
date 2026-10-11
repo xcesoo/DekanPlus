@@ -5,6 +5,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Перевести студента до іншої групи.</summary>
+/// <param name="Id">Ідентифікатор студента.</param>
+/// <param name="GroupId">Ідентифікатор нової групи.</param>
 public readonly record struct TransferStudentCommand(Guid Id, Guid GroupId) : IRequest;
 
 public class TransferStudentCommandHandler(

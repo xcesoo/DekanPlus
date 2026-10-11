@@ -5,6 +5,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Departments;
 
+/// <summary>Створити кафедру.</summary>
+/// <param name="Name">Назва.</param>
 public readonly record struct CreateDepartmentCommand(string Name) : IRequest<Guid>;
 
 public class CreateDepartmentCommandHandler(

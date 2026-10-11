@@ -5,6 +5,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Поновити раніше відрахованого студента.</summary>
+/// <param name="Id">Ідентифікатор студента.</param>
 public readonly record struct ReinstateStudentCommand(Guid Id) : IRequest;
 
 public class ReinstateStudentCommandHandler(
@@ -18,7 +20,10 @@ public class ReinstateStudentCommandHandler(
         var student = await studentRepository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException("Студента не знайдено.");
 
-        var context = new ReinstateStudentContext(student);
+        var activeDuplicateExists = await studentRepository.ExistsActiveAsync(
+            student.FullName, student.BirthDate, student.Id, cancellationToken);
+
+        var context = new ReinstateStudentContext(student, activeDuplicateExists);
         var validationResult = ruleEngine.Verify(context);
         if (!validationResult.IsSuccess)
             throw new InvalidOperationException(validationResult.ErrorMessage);

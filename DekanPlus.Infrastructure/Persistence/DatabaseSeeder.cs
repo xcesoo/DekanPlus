@@ -111,15 +111,17 @@ public class DatabaseSeeder
             .Select(dto => Group.Create(dto.Name, specialties[dto.SpecialtyCode].Id))
             .ToDictionary(g => g.Name);
 
-        var groupSpecialtyCodes = (parsedData.Groups ?? []).ToDictionary(g => g.Name, g => g.SpecialtyCode);
+        var groupSpecialtyCodes = (parsedData.Groups ?? []).ToDictionary(g => g.Name.Trim(), g => g.SpecialtyCode);
         var recordBookNumberGenerator = new RecordBookNumberGenerator(context);
         var students = new List<Student>();
 
         foreach (var dto in parsedData.Students ?? [])
         {
-            var group = groups[dto.GroupName];
+            var groupName = dto.GroupName.Trim();
+            var group = groups.GetValueOrDefault(groupName)
+                ?? throw new InvalidOperationException($"Seed: group '{groupName}' of student '{dto.LastName}' is not defined.");
             var recordBookNumber = await recordBookNumberGenerator.GenerateAsync(
-                groupSpecialtyCodes[dto.GroupName], dto.EnrollmentYear);
+                groupSpecialtyCodes[groupName], dto.EnrollmentYear);
 
             var student = Student.Create(
                 FullName.Create(dto.LastName, dto.FirstName, dto.MiddleName),
@@ -130,6 +132,9 @@ public class DatabaseSeeder
                 dto.StudyForm,
                 recordBookNumber,
                 group.Id);
+
+            if (dto.ExpulsionDate.HasValue != dto.ExpulsionReason.HasValue)
+                throw new InvalidOperationException($"Seed: student '{dto.LastName}' must have both expulsionDate and expulsionReason or neither.");
 
             if (dto.ExpulsionDate is { } expulsionDate && dto.ExpulsionReason is { } expulsionReason)
                 student.Expel(expulsionDate, expulsionReason);

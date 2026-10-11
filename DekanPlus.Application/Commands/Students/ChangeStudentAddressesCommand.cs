@@ -3,6 +3,10 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Змінити домашню адресу та адресу проживання студента.</summary>
+/// <param name="Id">Ідентифікатор студента.</param>
+/// <param name="HomeAddress">Домашня адреса.</param>
+/// <param name="ResidenceAddress">Адреса проживання (необов'язково; якщо не вказана, збігається з домашньою).</param>
 public readonly record struct ChangeStudentAddressesCommand(
     Guid Id,
     string HomeAddress,

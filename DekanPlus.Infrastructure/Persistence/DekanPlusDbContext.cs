@@ -32,13 +32,17 @@ public class DekanPlusDbContext : DbContext, IUnitOfWork
         {
             return await base.SaveChangesAsync(cancellationToken);
         }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConcurrencyConflictException("Запис було змінено іншим користувачем. Оновіть дані та повторіть операцію.");
+        }
         catch (Exception ex) when (GetPostgresException(ex) is { SqlState: PostgresErrorCodes.UniqueViolation })
         {
             throw new DuplicateValueException("Значення, що вводиться, вже використовується.");
         }
         catch (Exception ex) when (GetPostgresException(ex) is { SqlState: PostgresErrorCodes.ForeignKeyViolation })
         {
-            throw new EntityInUseException("Неможливо видалити запис: він використовується в інших даних (групах, студентах тощо).");
+            throw new EntityInUseException("Операція порушує зв'язки даних: запис використовується іншими даними (групами, студентами тощо) або посилається на неіснуючий запис.");
         }
     }
 

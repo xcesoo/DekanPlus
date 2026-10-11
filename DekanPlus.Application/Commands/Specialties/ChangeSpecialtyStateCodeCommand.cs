@@ -6,6 +6,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Specialties;
 
+/// <summary>Змінити державний номер фаху.</summary>
+/// <param name="Id">Ідентифікатор фаху.</param>
+/// <param name="StateCode">Державний номер (код), наприклад F3.</param>
 public readonly record struct ChangeSpecialtyStateCodeCommand(Guid Id, string StateCode) : IRequest;
 
 public class ChangeSpecialtyStateCodeCommandHandler(

@@ -3,6 +3,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Departments;
 
+/// <summary>Видалити кафедру (неможливо, якщо за нею закріплені фахи).</summary>
+/// <param name="Id">Ідентифікатор кафедри.</param>
 public readonly record struct DeleteDepartmentCommand(Guid Id) : IRequest;
 
 public class DeleteDepartmentCommandHandler(

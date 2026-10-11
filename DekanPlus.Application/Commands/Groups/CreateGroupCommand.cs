@@ -5,6 +5,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Groups;
 
+/// <summary>Створити групу.</summary>
+/// <param name="Name">Назва.</param>
+/// <param name="SpecialtyId">Ідентифікатор фаху.</param>
 public readonly record struct CreateGroupCommand(string Name, Guid SpecialtyId) : IRequest<Guid>;
 
 public class CreateGroupCommandHandler(

@@ -4,19 +4,14 @@ namespace DekanPlus.Application.Common.Rules.Implementations.Students;
 
 public class EnrollmentYearRule(TimeProvider timeProvider, StudentRulesOptions options) : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        if (context is not EnrollStudentContext ctx)
-            return RuleResult.Ok();
+        EnrollStudentContext ctx when ctx.EnrollmentYear > timeProvider.GetLocalNow().Year
+            => RuleResult.Failed("Рік вступу не може бути з майбутнього."),
 
-        var currentYear = timeProvider.GetUtcNow().UtcDateTime.Year;
+        EnrollStudentContext ctx when ctx.EnrollmentYear < options.MinEnrollmentYear
+            => RuleResult.Failed($"Рік вступу не може бути меншим за {options.MinEnrollmentYear}."),
 
-        if (ctx.EnrollmentYear > currentYear)
-            return RuleResult.Failed("Рік вступу не може бути з майбутнього.");
-
-        if (ctx.EnrollmentYear < options.MinEnrollmentYear)
-            return RuleResult.Failed($"Рік вступу не може бути меншим за {options.MinEnrollmentYear}.");
-
-        return RuleResult.Ok();
-    }
+        _ => RuleResult.Ok()
+    };
 }

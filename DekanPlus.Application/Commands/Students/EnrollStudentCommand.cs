@@ -9,6 +9,16 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Зарахувати студента: створити його особову картку. Номер залікової книжки формується автоматично.</summary>
+/// <param name="LastName">Прізвище.</param>
+/// <param name="FirstName">Ім'я.</param>
+/// <param name="MiddleName">По батькові (необов'язково).</param>
+/// <param name="BirthDate">Дата народження.</param>
+/// <param name="HomeAddress">Домашня адреса.</param>
+/// <param name="ResidenceAddress">Адреса проживання (необов'язково; якщо не вказана, збігається з домашньою).</param>
+/// <param name="EnrollmentYear">Рік вступу до ВНЗ.</param>
+/// <param name="StudyForm">Вид навчання.</param>
+/// <param name="GroupId">Ідентифікатор групи, до якої зараховується студент.</param>
 public readonly record struct EnrollStudentCommand(
     string LastName,
     string FirstName,
@@ -35,7 +45,7 @@ public class EnrollStudentCommandHandler(
 
         var fullName = FullName.Create(request.LastName, request.FirstName, request.MiddleName);
 
-        var activeStudentExists = await studentRepository.ExistsActiveAsync(fullName, request.BirthDate, cancellationToken);
+        var activeStudentExists = await studentRepository.ExistsActiveAsync(fullName, request.BirthDate, cancellationToken: cancellationToken);
 
         var context = new EnrollStudentContext(request.BirthDate, request.EnrollmentYear, activeStudentExists);
         var validationResult = ruleEngine.Verify(context);

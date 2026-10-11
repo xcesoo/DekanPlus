@@ -6,6 +6,10 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Відрахувати студента.</summary>
+/// <param name="Id">Ідентифікатор студента.</param>
+/// <param name="Date">Дата відрахування.</param>
+/// <param name="Reason">Причина відрахування.</param>
 public readonly record struct ExpelStudentCommand(Guid Id, DateOnly Date, ExpulsionReason Reason) : IRequest;
 
 public class ExpelStudentCommandHandler(

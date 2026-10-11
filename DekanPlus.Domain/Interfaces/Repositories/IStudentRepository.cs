@@ -8,7 +8,7 @@ public interface IStudentRepository
 {
     Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Student>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<bool> ExistsActiveAsync(FullName fullName, DateOnly birthDate, CancellationToken cancellationToken = default);
+    Task<bool> ExistsActiveAsync(FullName fullName, DateOnly birthDate, Guid? excludeStudentId = null, CancellationToken cancellationToken = default);
     Task AddAsync(Student student, CancellationToken cancellationToken = default);
 
     // Задача 2

@@ -3,6 +3,8 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Groups;
 
+/// <summary>Видалити групу (неможливо, якщо в ній є студенти, у т.ч. відраховані).</summary>
+/// <param name="Id">Ідентифікатор групи.</param>
 public readonly record struct DeleteGroupCommand(Guid Id) : IRequest;
 
 public class DeleteGroupCommandHandler(

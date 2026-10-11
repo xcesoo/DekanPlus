@@ -19,7 +19,7 @@ public sealed record Expulsion
     {
         if (date == default)
             throw new ArgumentException("Дата відрахування не може бути порожньою.");
-        if (!Enum.IsDefined(reason))
+        if (reason == ExpulsionReason.Unknown || !Enum.IsDefined(reason))
             throw new ArgumentException("Невідома причина відрахування.");
 
         return new Expulsion(date, reason);

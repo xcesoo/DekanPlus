@@ -5,6 +5,10 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Directions;
 
+/// <summary>Створити напрям підготовки.</summary>
+/// <param name="StateCode">Державний номер (код), наприклад F3.</param>
+/// <param name="Name">Назва.</param>
+/// <param name="Qualification">Кваліфікація, що присуджується випускнику.</param>
 public readonly record struct CreateDirectionCommand(
     string StateCode,
     string Name,

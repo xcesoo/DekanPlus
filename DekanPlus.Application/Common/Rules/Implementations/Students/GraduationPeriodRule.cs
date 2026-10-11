@@ -5,20 +5,12 @@ namespace DekanPlus.Application.Common.Rules.Implementations.Students;
 
 public class GraduationPeriodRule(StudentRulesOptions options) : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        if (context is not ExpelStudentContext { Reason: ExpulsionReason.Graduation } ctx)
-            return RuleResult.Ok();
+        ExpelStudentContext { Reason: ExpulsionReason.Graduation, Student.StudyForm: not StudyForm.Externship } ctx
+            when ctx.Date < new DateOnly(ctx.Student.EnrollmentYear + options.MinStudyYearsForGraduation, 6, 1)
+            => RuleResult.Failed("Строк навчання ще не завершено."),
 
-        if (ctx.Student.StudyForm == StudyForm.Externship)
-            return RuleResult.Ok();
-
-        var earliestGraduation = new DateOnly(ctx.Student.EnrollmentYear, 9, 1)
-            .AddYears(options.MinStudyYearsForGraduation);
-
-        if (ctx.Date < earliestGraduation)
-            return RuleResult.Failed("Строк навчання ще не завершено.");
-
-        return RuleResult.Ok();
-    }
+        _ => RuleResult.Ok()
+    };
 }

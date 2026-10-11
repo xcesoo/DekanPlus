@@ -9,6 +9,12 @@ public class DuplicateStudentRule : IBusinessRule
         EnrollStudentContext { ActiveStudentExists: true }
             => RuleResult.Failed("Студент з таким ПІБ та датою народження вже зарахований."),
 
+        ChangeStudentFullNameContext { ActiveStudentExists: true }
+            => RuleResult.Failed("Студент з таким ПІБ та датою народження вже навчається."),
+
+        ReinstateStudentContext { ActiveDuplicateExists: true }
+            => RuleResult.Failed("Неможливо поновити: студент з таким ПІБ та датою народження вже навчається."),
+
         _ => RuleResult.Ok()
     };
 }

@@ -4,6 +4,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Students;
 
+/// <summary>Змінити вид навчання студента.</summary>
+/// <param name="Id">Ідентифікатор студента.</param>
+/// <param name="StudyForm">Вид навчання.</param>
 public readonly record struct ChangeStudentStudyFormCommand(Guid Id, StudyForm StudyForm) : IRequest;
 
 public class ChangeStudentStudyFormCommandHandler(

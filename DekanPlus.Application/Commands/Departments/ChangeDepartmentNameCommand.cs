@@ -4,6 +4,9 @@ using MediatR;
 
 namespace DekanPlus.Application.Commands.Departments;
 
+/// <summary>Змінити назву кафедри.</summary>
+/// <param name="Id">Ідентифікатор кафедри.</param>
+/// <param name="Name">Назва.</param>
 public readonly record struct ChangeDepartmentNameCommand(Guid Id, string Name) : IRequest;
 
 public class ChangeDepartmentNameCommandHandler(

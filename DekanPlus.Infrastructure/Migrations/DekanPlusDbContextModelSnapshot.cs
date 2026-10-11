@@ -187,6 +187,12 @@ namespace DekanPlus.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("study_form");
 
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");

@@ -9,6 +9,9 @@ public class DirectionRepository(DekanPlusDbContext dbContext) : IDirectionRepos
     public Task<Direction?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         dbContext.Directions.FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
+    public Task<Direction?> GetWithSpecialtiesAsync(Guid id, CancellationToken cancellationToken = default) =>
+        dbContext.Directions.Include(d => d.Specialties).FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
+
     public async Task<IReadOnlyCollection<Direction>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await dbContext.Directions.AsNoTracking().OrderBy(d => d.StateCode).ToListAsync(cancellationToken);
 

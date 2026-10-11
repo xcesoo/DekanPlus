@@ -20,9 +20,10 @@ public class StudentRepository(DekanPlusDbContext dbContext) : IStudentRepositor
             .Include(s => s.Group).ThenInclude(g => g.Specialty)
             .ToListAsync(cancellationToken);
 
-    public Task<bool> ExistsActiveAsync(FullName fullName, DateOnly birthDate, CancellationToken cancellationToken = default) =>
+    public Task<bool> ExistsActiveAsync(FullName fullName, DateOnly birthDate, Guid? excludeStudentId = null, CancellationToken cancellationToken = default) =>
         dbContext.Students.AnyAsync(s =>
             s.Expulsion == null &&
+            (excludeStudentId == null || s.Id != excludeStudentId) &&
             s.BirthDate == birthDate &&
             s.FullName.LastName == fullName.LastName &&
             s.FullName.FirstName == fullName.FirstName &&

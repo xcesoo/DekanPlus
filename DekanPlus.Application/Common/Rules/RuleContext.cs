@@ -19,7 +19,15 @@ public record TransferStudentContext(
     Group TargetGroup) : IRuleContext;
 
 public record ReinstateStudentContext(
-    Student Student) : IRuleContext;
+    Student Student,
+    bool ActiveDuplicateExists) : IRuleContext;
+
+public record ChangeStudentFullNameContext(
+    bool ActiveStudentExists) : IRuleContext;
+
+public record ChangeDirectionStateCodeContext(
+    Direction Direction,
+    string StateCode) : IRuleContext;
 
 public record CreateSpecialtyContext(
     Direction Direction,

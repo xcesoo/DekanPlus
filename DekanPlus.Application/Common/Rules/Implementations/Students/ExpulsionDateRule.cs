@@ -4,19 +4,16 @@ namespace DekanPlus.Application.Common.Rules.Implementations.Students;
 
 public class ExpulsionDateRule(TimeProvider timeProvider) : IBusinessRule
 {
-    public RuleResult Apply(IRuleContext context)
+    private DateOnly Today => DateOnly.FromDateTime(timeProvider.GetLocalNow().DateTime);
+
+    public RuleResult Apply(IRuleContext context) => context switch
     {
-        if (context is not ExpelStudentContext ctx)
-            return RuleResult.Ok();
+        ExpelStudentContext ctx when ctx.Date > Today
+            => RuleResult.Failed("Дата відрахування не може бути в майбутньому."),
 
-        var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
-        if (ctx.Date > today)
-            return RuleResult.Failed("Дата відрахування не може бути в майбутньому.");
+        ExpelStudentContext ctx when ctx.Date < new DateOnly(ctx.Student.EnrollmentYear, 9, 1)
+            => RuleResult.Failed("Дата відрахування не може передувати вступу."),
 
-        var admissionDate = new DateOnly(ctx.Student.EnrollmentYear, 9, 1);
-        if (ctx.Date < admissionDate)
-            return RuleResult.Failed("Дата відрахування не може передувати вступу.");
-
-        return RuleResult.Ok();
-    }
+        _ => RuleResult.Ok()
+    };
 }
